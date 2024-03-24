@@ -1,0 +1,77 @@
+
+# Библиотека книг
+
+-- TYPESCRIPT --   
+
+ПРИМЕР РАБОТЫ С IOC И DI   
+
+контейнер создается здесь:    
+./app/src/infrastructure/   
+
+используется здесь:    
+./app/src/books/book-routes.ts
+
+### пакеты
+
+- inversify
+- reflect-metadata
+
+### основа
+
+- mongodb
+- mongoos
+- node
+
+### работает по адресу
+
+- http://localhost:8080
+- http://localhost:8080/api/books
+
+### запуск с помощью yml
+
+docker compose up    
+
+```yml title="docker-compose.yml"
+
+version: "3.0"
+
+services:
+  
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017
+
+  library:
+    image: node:20.8-alpine
+    restart: always
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    ports:
+      - 8080:8080
+    environment:
+      - PORT=8080
+      - MONGO_URL=mongodb://root:example@mongo:27017
+    command: npm run dev
+    depends_on:
+      - mongo
+
+
+```
+
+
+
+
